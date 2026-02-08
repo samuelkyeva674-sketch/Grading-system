@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>School Grading System</title>
+
+<style>
+body {
+    font-family: Arial, sans-serif;
+    padding: 15px;
+}
+table {
+    border-collapse: collapse;
+    width: 100%;
+    font-size: 13px;
+}
+th, td {
+    border: 1px solid #444;
+    padding: 5px;
+    text-align: center;
+}
+th {
+    background: #f2f2f2;
+}
+input {
+    width: 60px;
+    text-align: center;
+}
+.name {
+    width: 120px;
+}
+.total, .average, .grade {
+    font-weight: bold;
+}
+</style>
+</head>
+
+<body>
+
+<h2>Student Grading System</h2>
+
+<table id="marksTable">
+<thead>
+<tr>
+    <th>Name</th>
+    <th>Math</th>
+    <th>Chem</th>
+    <th>Phys</th>
+    <th>Bio</th>
+    <th>CRE</th>
+    <th>Geo</th>
+    <th>Hist</th>
+    <th>Bus</th>
+    <th>Agric</th>
+    <th>Comp</th>
+    <th>Eng</th>
+    <th>Kisw</th>
+    <th>Total</th>
+    <th>Average</th>
+    <th>Grade</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+    <td><input class="name" placeholder="Student Name"></td>
+
+    <td><input type="number" oninput="calculate(this)"></td>
+    <td><input type="number" oninput="calculate(this)"></td>
+    <td><input type="number" oninput="calculate(this)"></td>
+    <td><input type="number" oninput="calculate(this)"></td>
+    <td><input type="number" oninput="calculate(this)"></td>
+    <td><input type="number" oninput="calculate(this)"></td>
+    <td><input type="number" oninput="calculate(this)"></td>
+    <td><input type="number" oninput="calculate(this)"></td>
+    <td><input type="number" oninput="calculate(this)"></td>
+    <td><input type="number" oninput="calculate(this)"></td>
+    <td><input type="number" oninput="calculate(this)"></td>
+    <td><input type="number" oninput="calculate(this)"></td>
+
+    <td class="total">0</td>
+    <td class="average">0</td>
+    <td class="grade"></td>
+</tr>
+</tbody>
+</table>
+
+<button onclick="addRow()">➕ Add Student</button>
+
+<script>
+function getGrade(avg) {
+    if (avg >= 84) return "A";
+    if (avg >= 80) return "A-";
+    if (avg >= 75) return "B+";
+    if (avg >= 70) return "B";
+    if (avg >= 65) return "B-";
+    if (avg >= 57) return "C+";
+    if (avg >= 50) return "C";
+    if (avg >= 45) return "C-";
+    if (avg >= 40) return "D+";
+    if (avg >= 35) return "D";
+    if (avg >= 30) return "D-";
+    return "E";
+}
+
+function calculate(input) {
+    let row = input.parentElement.parentElement;
+    let inputs = row.querySelectorAll("td input[type='number']");
+    let total = 0, count = 0;
+
+    inputs.forEach(i => {
+        if (i.value !== "") {
+            total += Number(i.value);
+            count++;
+        }
+    });
+
+    let avg = count ? (total / count).toFixed(2) : 0;
+
+    row.querySelector(".total").textContent = total;
+    row.querySelector(".average").textContent = avg;
+    row.querySelector(".grade").textContent = getGrade(avg);
+
+    saveData();
+}
+
+function addRow() {
+    let table = document.querySelector("#marksTable tbody");
+    let row = table.rows[0].cloneNode(true);
+
+    row.querySelectorAll("input").forEach(i => i.value = "");
+    row.querySelector(".total").textContent = "0";
+    row.querySelector(".average").textContent = "0";
+    row.querySelector(".grade").textContent = "";
+
+    table.appendChild(row);
+}
+
+function saveData() {
+    let table = document.getElementById("marksTable").innerHTML;
+    localStorage.setItem("marksData", table);
+}
+
+function loadData() {
+    let saved = localStorage.getItem("marksData");
+    if (saved) {
+        document.getElementById("marksTable").innerHTML = saved;
+    }
+}
+
+window.onload = loadData;
+</script>
+
+</body>
+</html>
